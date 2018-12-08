@@ -1,6 +1,9 @@
+import map from './map.js';
+import areaSelection from './areaSelection.js';
 
 function start() {
-	console.log('Start!');
+	map.init();
+	areaSelection.init();
 }
 
 start();
