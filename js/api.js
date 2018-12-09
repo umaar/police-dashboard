@@ -1,3 +1,10 @@
+// const documentID = encodeURIComponent(`id::5aacb3ccdb38c18078a39eb0ddbd53c2`);
+
+
+const documentID = encodeURIComponent(`id::6ecef731c04033d77d0ee90572852dd6`);
+
+
+console.log({documentID});
 const mockData = 
 {
     "matching_results": 1,
@@ -2697,12 +2704,34 @@ const mockData =
     ]
 };
 
-async function watson({borough}) {
+async function watsonPeople() {
+    return await (await fetch("https://gateway.watsonplatform.net/discovery/api/v1/environments/5177c5ec-998d-4985-aae1-335b8c27b05a/collections/3f97f07e-d2ad-453d-b9fe-9a7562576a6b/query?version=2018-08-01&aggregation=nested%28enriched_text.entities%29.filter%28enriched_text.entities.type%3A%3A%22Person%22%29.term%28enriched_text.entities.text%2Ccount%3A10%29&filter="+documentID+"&deduplicate=false&highlight=true&passages=true&passages.count=3&query=", {"headers":{"authorization":"Basic YXBpa2V5Oi1qZnRNUVdBUzZhZkZGdHA4a19QMjJ5dVNlM2o4cEFjYjg5NWxkZDhtdzQz"},"referrer":"https://umaar.com/","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})).json();
+}
+
+async function watsonEvidence() {
+    return await (await fetch("https://gateway.watsonplatform.net/discovery/api/v1/environments/5177c5ec-998d-4985-aae1-335b8c27b05a/collections/3f97f07e-d2ad-453d-b9fe-9a7562576a6b/query?version=2018-08-01&filter="+documentID+"&deduplicate=false&highlight=true&passages=true&passages.count=5&natural_language_query=What%20evidence%20was%20collected", {"headers":{"authorization":"Basic YXBpa2V5Oi1qZnRNUVdBUzZhZkZGdHA4a19QMjJ5dVNlM2o4cEFjYjg5NWxkZDhtdzQz"},"referrer":"https://umaar.com/","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})).json();
+}
+
+async function watsonComplete({borough}) {
 	// TODO: Make API Call
 
-	return mockData;
+return await (await fetch("https://gateway.watsonplatform.net/discovery/api/v1/environments/5177c5ec-998d-4985-aae1-335b8c27b05a/collections/3f97f07e-d2ad-453d-b9fe-9a7562576a6b/query?version=2018-08-01&filter=id%3A%3A%225aacb3ccdb38c18078a39eb0ddbd53c2%22&deduplicate=false&highlight=true&passages=true&passages.count=5&natural_language_query=WHO%20IS%20THE%20VICTIM", {"headers":{"authorization":"Basic YXBpa2V5Oi1qZnRNUVdBUzZhZkZGdHA4a19QMjJ5dVNlM2o4cEFjYjg5NWxkZDhtdzQz"},"referrer":"https://umaar.com/","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})).json()
+	// return mockData;
+}
+
+async function watsonQuestion({question}) {
+    console.log('Watson received a question', question);
+    return await (await fetch(`https://gateway.watsonplatform.net/discovery/api/v1/environments/5177c5ec-998d-4985-aae1-335b8c27b05a/collections/3f97f07e-d2ad-453d-b9fe-9a7562576a6b/query?version=2018-08-01&filter=${documentID}&deduplicate=false&highlight=true&passages=true&passages.count=5&natural_language_query=${encodeURI(question)}`, {"headers":{"authorization":"Basic YXBpa2V5Oi1qZnRNUVdBUzZhZkZGdHA4a19QMjJ5dVNlM2o4cEFjYjg5NWxkZDhtdzQz"},"referrer":"https://umaar.com/","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})).json()
+}
+
+async function watsonIncidentType() {
+    return await (await fetch("https://gateway.watsonplatform.net/discovery/api/v1/environments/5177c5ec-998d-4985-aae1-335b8c27b05a/collections/3f97f07e-d2ad-453d-b9fe-9a7562576a6b/query?version=2018-08-01&aggregation=nested%28enriched_text.entities%29.filter%28enriched_text.entities.type%3A%3A%22Crime%22%29.term%28enriched_text.entities.text%2Ccount%3A1%29&filter="+documentID+"&deduplicate=false&highlight=true&passages=true&passages.count=3&query=", {"headers":{"authorization":"Basic YXBpa2V5Oi1qZnRNUVdBUzZhZkZGdHA4a19QMjJ5dVNlM2o4cEFjYjg5NWxkZDhtdzQz"},"referrer":"https://umaar.com/","referrerPolicy":"no-referrer-when-downgrade","body":null,"method":"GET","mode":"cors"})).json();
 }
 
 export default {
-	watson
+	watsonComplete,
+    watsonQuestion,
+    watsonPeople,
+    watsonEvidence,
+    watsonIncidentType
 };

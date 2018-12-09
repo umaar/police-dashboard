@@ -2,8 +2,6 @@ import data from './london-wards-2014.js';
 import pubsub from './pubsub.js';
 
 function createMap() {
-	console.log({data});
-
 	const londonLongLat = [51.509865, -0.118092];
 	const map = L.map('map').setView(londonLongLat, 10);
 
@@ -12,6 +10,8 @@ function createMap() {
 		attribution: '',
 		id: 'mapbox.light'
 	}).addTo(map);
+
+	let fakeClickDone = true;
 
 	function onEachFeature(feature, layer) {
 		const {
@@ -29,6 +29,15 @@ function createMap() {
 				<li><strong>borough:</strong> ${borough}</li>
 			</ul>
 		`;
+
+		if (!fakeClickDone) {
+			setTimeout(() => {
+				pubsub.publish('area:click', {
+					borough
+				});
+			}, 100);
+			fakeClickDone = true;
+		}
 
 		layer.bindPopup(popupContent);
 		layer.on('popupopen', () => {
